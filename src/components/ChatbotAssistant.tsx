@@ -1,0 +1,212 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { MessageCircle, Send, Bot, User, Mic } from 'lucide-react';
+
+// Optional: extend window object for TypeScript (if needed)
+declare global {
+  interface Window {
+    webkitSpeechRecognition: any;
+    SpeechRecognition: any;
+  }
+}
+
+interface Message {
+  id: string;
+  type: 'user' | 'bot';
+  content: string;
+  timestamp: Date;
+}
+
+const ChatbotAssistant: React.FC = () => {
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: '1',
+      type: 'bot',
+      content: "Hello! I'm here to support you on your wellness journey. How can I help you today?",
+      timestamp: new Date()
+    }
+  ]);
+  const [inputValue, setInputValue] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const [listening, setListening] = useState(false);
+
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  // Scroll to bottom whenever messages change
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
+
+  // Initialize Speech Recognition
+  useEffect(() => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      console.warn('Speech Recognition not supported');
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.continuous = false;
+
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
+      const transcript = event.results[0][0].transcript;
+      setInputValue(transcript);
+    };
+
+    recognition.onend = () => {
+      setListening(false);
+    };
+
+    recognition.onerror = (event) => {
+      console.error('Speech recognition error:', event);
+      setListening(false);
+    };
+
+    recognitionRef.current = recognition;
+  }, []);
+
+  const handleSend = async () => {
+    if (!inputValue.trim()) return;
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      type: 'user',
+      content: inputValue,
+      timestamp: new Date()
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInputValue('');
+    setIsTyping(true);
+
+    try {
+      const res = await fetch("http://localhost:5000/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: userMessage.content })
+      });
+
+      const data = await res.json();
+
+      const botMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        type: 'bot',
+        content: data.answer || "⚠ Something went wrong",
+        timestamp: new Date()
+      };
+
+      setMessages(prev => [...prev, botMessage]);
+    } catch (error) {
+      console.error('Fetch error:', error);
+      const errorMessage: Message = {
+        id: (Date.now() + 2).toString(),
+        type: 'bot',
+        content: "⚠ Server error. Please try again.",
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsTyping(false);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
+  const toggleListening = () => {
+    const recognition = recognitionRef.current;
+    if (!recognition) return;
+
+    if (listening) {
+      recognition.stop();
+      setListening(false);
+    } else {
+      recognition.start();
+      setListening(true);
+    }
+  };
+
+  return (
+    <div className="bg-gradient-to-br from-blue-100 via-white to-green-200 rounded-2xl shadow-lg h-[600px] flex flex-col">
+      {/* Header */}
+      <div className="flex items-center justify-center p-6 border-b border-gray-300">
+        <MessageCircle className="w-6 h-6 text-blue-500 mr-3" />
+        <h2 className="text-2xl font-semibold text-gray-800">AI Wellness Assistant</h2>
+      </div>
+
+      {/* Chat Messages */}
+      <div className="flex-1 overflow-y-auto p-6 space-y-4">
+        {messages.map((message) => (
+          <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+            <div className={`flex items-start max-w-xs lg:max-w-md ${message.type === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+              <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
+                message.type === 'user' ? 'bg-blue-500 ml-2' : 'bg-green-500 mr-2'
+              }`}>
+                {message.type === 'user' ? <User className="w-4 h-4 text-white" /> : <Bot className="w-4 h-4 text-white" />}
+              </div>
+              <div className={`p-3 rounded-2xl ${message.type === 'user' ? 'bg-blue-500 text-white rounded-tr-sm' : 'bg-gray-100 text-gray-800 rounded-tl-sm'}`}>
+                <p className="text-sm leading-relaxed">{message.content}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+
+        {isTyping && (
+          <div className="flex justify-start">
+            <div className="flex items-start max-w-xs lg:max-w-md">
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-500 mr-2 flex items-center justify-center">
+                <Bot className="w-4 h-4 text-white" />
+              </div>
+              <div className="bg-gray-100 p-3 rounded-2xl rounded-tl-sm">
+                <div className="flex space-x-1">
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Scroll-to-bottom ref */}
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* Input Box */}
+      <div className="p-6 border-t border-gray-300 flex space-x-4 items-center">
+        <input
+          type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyPress={handleKeyPress}
+          placeholder="Type your message..."
+          className="flex-1 p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 z-10 relative"
+        />
+        <button
+          onClick={handleSend}
+          disabled={!inputValue.trim() || isTyping}
+          className="bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white p-3 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:transform-none shadow-lg hover:shadow-xl"
+        >
+          <Send className="w-5 h-5" />
+        </button>
+        <button
+          onClick={toggleListening}
+          className={`p-3 rounded-xl ${listening ? 'bg-red-500' : 'bg-green-500'} text-white hover:scale-105 transition-transform shadow-lg`}
+        >
+          <Mic className="w-5 h-5" />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default ChatbotAssistant;
