@@ -40,7 +40,7 @@ const VideosHub: React.FC = () => {
       creator: 'Sadhguru',
       category: 'Stress Relief',
       duration: '11:06',
-      description: 'Sadhguru talks about how to overcome anxiety disorders without any kind of external support..',
+      description: 'Sadhguru talks about how to overcome anxiety disorders without any kind of external support.',
       videoUrl: 'https://www.youtube.com/watch?v=1XCObQjSHIs',
       thumbnailUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdEoC0szK8N8kToebmvUGoZIQpRjHLMmKUtw&s',
       views: '5.4M'
@@ -58,14 +58,14 @@ const VideosHub: React.FC = () => {
     },
     {
       id: '4',
-      title: 'How to Focus on your Goa',
-      creator: ' Sandeep Maheshwari',
+      title: 'How to Focus on your Goal',
+      creator: 'Sandeep Maheshwari',
       category: 'Study Tips',
-      duration: '16:05',
+      duration: '18:55',
       description: "Think about what's really important to you in life. Make that your priority.",
       videoUrl: 'https://www.youtube.com/watch?v=AmTbx_8SMMw',
       thumbnailUrl: 'https://i.ytimg.com/vi/AmTbx_8SMMw/mqdefault.jpg',
-      views: '31.4K'
+      views: '10M'
     },
     {
       id: '5',
@@ -99,7 +99,7 @@ const VideosHub: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-green-500  opacity-95 ">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-green-500 opacity-95">
       <StudentNavbar activeSection="videos" setActiveSection={() => {}} />
 
       <main className="max-w-7xl mx-auto px-6 py-8">
@@ -113,7 +113,7 @@ const VideosHub: React.FC = () => {
           </button>
           <div>
             <h1 className="text-4xl font-bold text-gray-800 mb-2 tracking-tight" style={{ letterSpacing: '0.5px' }}>Videos Hub</h1>
-            <p className="text-gray-600 text-lg">Motivational and educational content for your wellness journey</p>
+            <p className="text-gray-600 text-lg font-semi-bold">Motivational and educational content for your wellness journey</p>
           </div>
         </div>
 
@@ -152,7 +152,7 @@ const VideosHub: React.FC = () => {
         {/* Videos Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredVideos.map((video) => (
-            <div key={video.id} className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+            <div key={video.id} className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col">
               <div className="relative group">
                 <img
                   src={video.thumbnailUrl}
@@ -167,30 +167,33 @@ const VideosHub: React.FC = () => {
                 </div>
               </div>
 
-              <div className="p-6">
-                <div className="mb-3">
-                  <span className="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-1 rounded-full">
-                    {video.category}
-                  </span>
+              <div className="p-6 flex flex-col flex-1 justify-between">
+                <div>
+                  <div className="mb-3">
+                    <span className="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-1 rounded-full">
+                      {video.category}
+                    </span>
+                  </div>
+
+                  <h3 className="text-lg font-bold text-gray-800 mb-2 tracking-tight">{video.title}</h3>
+                  <p className="text-gray-600 text-sm mb-2 font-medium">by {video.creator}</p>
+                  <p className="text-gray-700 text-sm leading-relaxed mb-4">{video.description}</p>
+
+                  <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
+                    <span>{video.views} views</span>
+                    <span className="flex items-center">
+                      <Clock className="w-3 h-3 mr-1" />
+                      {video.duration}
+                    </span>
+                  </div>
                 </div>
 
-                <h3 className="text-lg font-bold text-gray-800 mb-2 tracking-tight">{video.title}</h3>
-                <p className="text-gray-600 text-sm mb-2 font-medium">by {video.creator}</p>
-                <p className="text-gray-700 text-sm leading-relaxed mb-4">{video.description}</p>
-
-                <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
-                  <span>{video.views} views</span>
-                  <span className="flex items-center">
-                    <Clock className="w-3 h-3 mr-1" />
-                    {video.duration}
-                  </span>
-                </div>
-
+                {/* ✅ Watch Video Button */}
                 <a
                   href={video.videoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full bg-purple-500 hover:bg-purple-600 text-white text-center py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center"
+                  className="w-full inline-flex justify-center items-center py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg mt-auto bg-gradient-to-r from-fuchsia-300 to-indigo-600 text-white"
                 >
                   <Play className="w-4 h-4 mr-2" />
                   Watch Video

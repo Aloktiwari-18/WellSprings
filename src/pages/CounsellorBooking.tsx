@@ -23,7 +23,7 @@ const CounsellorBooking: React.FC = () => {
 const counsellors = [
   {
     id: '1',
-    name: 'Dr. Shyam Bhat',
+    name: 'Dr. Shyam Bhatt',
     specialty: 'Stress & Anxiety',
     rating: 4.9,
     experience: '25+ years',
@@ -166,7 +166,7 @@ const counsellors = [
           </button>
           <div>
             <h1 className="text-4xl font-bold text-gray-800 mb-2 tracking-wide">Book a Counsellor</h1>
-            <p className="text-gray-600 text-lg font-light">Choose a counsellor for anonymous, confidential support</p>
+            <p className="text-gray-600 text-lg font-semi-bold">Choose a counsellor for anonymous, confidential support</p>
           </div>
         </div>
 

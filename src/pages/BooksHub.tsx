@@ -136,10 +136,10 @@ const BooksHub: React.FC = () => {
             Dashboard
           </button>
           <div>
-            <h1 className="text-4xl font-semibold text-gray-800 mb-1 tracking-wide">
+            <h1 className="text-4xl font-bold text-gray-800 mb-1 tracking-wide">
               Books Hub
             </h1>
-            <p className="text-gray-600 text-lg font-light">
+            <p className="text-gray-600 text-lg font-semi-bold">
               Discover inspiring books for your mental wellbeing 🌱
             </p>
           </div>

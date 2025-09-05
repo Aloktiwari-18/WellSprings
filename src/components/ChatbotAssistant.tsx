@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MessageCircle, Send, Bot, User, Mic } from 'lucide-react';
 
-// Optional: extend window object for TypeScript (if needed)
+// TypeScript global declaration for SpeechRecognition
 declare global {
   interface Window {
-    webkitSpeechRecognition: any;
-    SpeechRecognition: any;
+    webkitSpeechRecognition?: any;
+    SpeechRecognition?: any;
   }
 }
 
@@ -29,22 +29,19 @@ const ChatbotAssistant: React.FC = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [listening, setListening] = useState(false);
 
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<any>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   // Scroll to bottom whenever messages change
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
   // Initialize Speech Recognition
   useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
     if (!SpeechRecognition) {
-      console.warn('Speech Recognition not supported');
+      console.warn('Speech Recognition not supported in this browser.');
       return;
     }
 
@@ -53,19 +50,13 @@ const ChatbotAssistant: React.FC = () => {
     recognition.interimResults = false;
     recognition.continuous = false;
 
-    recognition.onresult = (event: SpeechRecognitionEvent) => {
+    recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript;
       setInputValue(transcript);
     };
 
-    recognition.onend = () => {
-      setListening(false);
-    };
-
-    recognition.onerror = (event) => {
-      console.error('Speech recognition error:', event);
-      setListening(false);
-    };
+    recognition.onerror = () => setListening(false);
+    recognition.onend = () => setListening(false);
 
     recognitionRef.current = recognition;
   }, []);
@@ -85,9 +76,9 @@ const ChatbotAssistant: React.FC = () => {
     setIsTyping(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('http://localhost:5000/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userMessage.content })
       });
 
@@ -96,7 +87,7 @@ const ChatbotAssistant: React.FC = () => {
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'bot',
-        content: data.answer || "⚠ Something went wrong",
+        content: data.answer || '⚠ Something went wrong',
         timestamp: new Date()
       };
 
@@ -106,7 +97,7 @@ const ChatbotAssistant: React.FC = () => {
       const errorMessage: Message = {
         id: (Date.now() + 2).toString(),
         type: 'bot',
-        content: "⚠ Server error. Please try again.",
+        content: '⚠ Server error. Please try again.',
         timestamp: new Date()
       };
       setMessages(prev => [...prev, errorMessage]);
@@ -115,7 +106,7 @@ const ChatbotAssistant: React.FC = () => {
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSend();
@@ -137,15 +128,16 @@ const ChatbotAssistant: React.FC = () => {
 
   return (
     <div className="bg-gradient-to-br from-blue-100 via-white to-green-200 rounded-2xl shadow-lg h-[600px] flex flex-col">
+      
       {/* Header */}
       <div className="flex items-center justify-center p-6 border-b border-gray-300">
         <MessageCircle className="w-6 h-6 text-blue-500 mr-3" />
-        <h2 className="text-2xl font-semibold text-gray-800">AI Wellness Assistant</h2>
+        <h2 className="text-2xl font-semibold text-gray-800">WellSpring Friend</h2>
       </div>
 
       {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto p-6 space-y-4">
-        {messages.map((message) => (
+        {messages.map(message => (
           <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className={`flex items-start max-w-xs lg:max-w-md ${message.type === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
               <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
@@ -177,7 +169,6 @@ const ChatbotAssistant: React.FC = () => {
           </div>
         )}
 
-        {/* Scroll-to-bottom ref */}
         <div ref={messagesEndRef} />
       </div>
 
@@ -187,7 +178,7 @@ const ChatbotAssistant: React.FC = () => {
           type="text"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          onKeyPress={handleKeyPress}
+          onKeyDown={handleKeyDown}
           placeholder="Type your message..."
           className="flex-1 p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 z-10 relative"
         />

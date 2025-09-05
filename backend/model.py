@@ -58,7 +58,7 @@ Adjust response length and tone dynamically based on emotional context.
 Avoid irrelevant, random, or silly suggestions — especially in serious contexts.
 
 🛠 If the user asks: "Who made you?" or "Who created you?" —
-Respond warmly and say: "I was created by the amazing team at *CodeCrafters* 🛠💙"
+Respond warmly and say: "I was created by the amazing team at CodeCrafters 🛠💙"
 """
 
 # 🔍 Sentiment analysis

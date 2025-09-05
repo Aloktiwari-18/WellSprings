@@ -44,15 +44,15 @@ const BroadcastHub: React.FC = () => {
     {
       id: "1",
       title: "Stress Management Workshop",
-      type: "upcoming",
+      type: "recorded",
       category: "Workshops",
       description:
         "Learn effective techniques to manage academic stress and maintain mental balance.",
       date: "2025-01-15",
       time: "2:00 PM",
-      duration: "1 hour",
-      host: "Dr. Sarah Chen",
-      broadcastUrl: "https://example.com/workshop1",
+      duration: "20+ hrs",
+      host: "NPTEL",
+      broadcastUrl: "https://www.youtube.com/watch?v=AdgkljdMPh0",
       thumbnailUrl:
         "https://images.squarespace-cdn.com/content/v1/59e54431268b9603c799fc44/1520637818447-I3JY9K41AA2NCW97XZ0P/Stress+Management+Workshop+Banner.png",
     },
@@ -68,7 +68,7 @@ const BroadcastHub: React.FC = () => {
       duration: "45 mins",
       host: "WellSpring Team",
       attendees: 1250,
-      broadcastUrl: "https://example.com/podcast1",
+      broadcastUrl: "https://www.youtube.com/playlist?list=PLj2NOoB2id1mXpxqTTsvtFxXav1gGVnQt",
       thumbnailUrl:
         "https://mccollege.edu/wp-content/uploads/2023/10/CAMPUS-CONNECTIONS_Podcast_Banner.jpg",
     },
@@ -100,22 +100,22 @@ const BroadcastHub: React.FC = () => {
       duration: "30 mins",
       host: "Mindfulness Center",
       attendees: 567,
-      broadcastUrl: "https://example.com/mindfulness1",
+      broadcastUrl: "https://www.youtube.com/watch?v=jy-swk49uCg",
       thumbnailUrl:
         "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?auto=format&fit=crop&w=400&q=80",
     },
     {
       id: "5",
-      title: "New Counsellor Introduction",
-      type: "upcoming",
+      title: "Practical Solution to deal with loneliness",
+      type: "recorded",
       category: "Announcements",
       description:
-        "Meet our new counsellors and learn about their specialties and availability.",
+        "Loneliness is common today; overcome it using self-talk, therapy, community, physical wellness, hobbies, mindfulness, social connections, and patience..",
       date: "2025-01-18",
       time: "12:00 PM",
-      duration: "30 mins",
-      host: "WellSpring Admin",
-      broadcastUrl: "https://example.com/announcement1",
+      duration: "59 mins",
+      host: "Ranbeer Allahbadia",
+      broadcastUrl: "https://www.youtube.com/watch?v=ypAHnzD04rg",
       thumbnailUrl:
         "https://static.vecteezy.com/system/resources/previews/011/496/083/large_2x/psychologist-appointment-in-cartoon-flat-style-concept-of-mental-health-illustration-of-doctor-counseling-patient-two-women-talking-psychology-consultation-vector.jpg",
     },
@@ -129,9 +129,9 @@ const BroadcastHub: React.FC = () => {
       date: "2025-01-05",
       time: "Available now",
       duration: "1 hour",
-      host: "Academic Success Center",
+      host: "Shonen Growth",
       attendees: 2340,
-      broadcastUrl: "https://example.com/study1",
+      broadcastUrl: "https://www.youtube.com/watch?v=LHYAX_aK1qk",
       thumbnailUrl:
         "https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=400&q=80",
     },
@@ -153,7 +153,7 @@ const BroadcastHub: React.FC = () => {
       case "upcoming":
         return "bg-blue-500 text-white";
       case "recorded":
-        return "bg-green-500 text-white";
+        return "bg-gradient-to-r from-fuchsia-300 to-indigo-600 text-white";
       default:
         return "bg-gray-500 text-white";
     }
@@ -173,7 +173,7 @@ const BroadcastHub: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-green-500  opacity-95">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-green-500 opacity-95">
       <StudentNavbar activeSection="broadcasts" setActiveSection={() => {}} />
 
       <main className="max-w-7xl mx-auto px-6 py-8">
@@ -186,10 +186,10 @@ const BroadcastHub: React.FC = () => {
             Dashboard
           </button>
           <div>
-            <h1 className="text-3xl font-light text-gray-800 mb-2">
+            <h1 className="text-3xl font-bold text-gray-800 mb-2">
               Broadcast Hub
             </h1>
-            <p className="text-gray-600">
+            <p className="text-gray-600 text-lg">
               Live sessions, podcasts, and wellness events
             </p>
           </div>
@@ -232,7 +232,7 @@ const BroadcastHub: React.FC = () => {
           {filteredBroadcasts.map((broadcast) => (
             <div
               key={broadcast.id}
-              className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+              className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col"
             >
               <div className="relative">
                 <img
@@ -250,49 +250,50 @@ const BroadcastHub: React.FC = () => {
                   </span>
                 </div>
                 {broadcast.type === "live" && (
-                  <div className="absolute top-3 right-3 bg-red-500 w-3 h-3 rounded-full animate-pulse"></div>
+                  <div className="absolute top-3 right-3 bg-gradient-to-r from-red-300 to-red-500 w-3 h-3 rounded-full animate-pulse"></div>
                 )}
               </div>
 
-              <div className="p-6">
-                <div className="mb-3">
-                  <span className="text-xs font-medium text-orange-600 bg-orange-100 px-2 py-1 rounded-full">
-                    {broadcast.category}
-                  </span>
-                </div>
-
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                  {broadcast.title}
-                </h3>
-                <p className="text-gray-600 text-sm mb-2">
-                  by {broadcast.host}
-                </p>
-                <p className="text-gray-700 text-sm leading-relaxed mb-4">
-                  {broadcast.description}
-                </p>
-
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center text-sm text-gray-600">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    {new Date(broadcast.date).toLocaleDateString()}
+              <div className="p-6 flex flex-col flex-1 justify-between">
+                <div>
+                  <div className="mb-3">
+                    <span className="text-xs font-medium text-orange-600 bg-orange-100 px-2 py-1 rounded-full">
+                      {broadcast.category}
+                    </span>
                   </div>
-                  <div className="flex items-center text-sm text-gray-600">
-                    <Clock className="w-4 h-4 mr-2" />
-                    {broadcast.time} • {broadcast.duration}
-                  </div>
-                  {broadcast.attendees && (
+
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                    {broadcast.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-2">by {broadcast.host}</p>
+                  <p className="text-gray-700 text-sm leading-relaxed mb-4">
+                    {broadcast.description}
+                  </p>
+
+                  <div className="space-y-2 mb-4">
                     <div className="flex items-center text-sm text-gray-600">
-                      <Users className="w-4 h-4 mr-2" />
-                      {broadcast.attendees} participants
+                      <Calendar className="w-4 h-4 mr-2" />
+                      {new Date(broadcast.date).toLocaleDateString()}
                     </div>
-                  )}
+                    <div className="flex items-center text-sm text-gray-600">
+                      <Clock className="w-4 h-4 mr-2" />
+                      {broadcast.time} • {broadcast.duration}
+                    </div>
+                    {broadcast.attendees && (
+                      <div className="flex items-center text-sm text-gray-600">
+                        <Users className="w-4 h-4 mr-2" />
+                        {broadcast.attendees} participants
+                      </div>
+                    )}
+                  </div>
                 </div>
 
+                {/* ✅ Watch / Join Button */}
                 <a
                   href={broadcast.broadcastUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`w-full text-center py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center ${
+                  className={`w-full inline-flex justify-center items-center py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg mt-auto ${
                     broadcast.type === "live"
                       ? "bg-red-500 hover:bg-red-600 text-white"
                       : broadcast.type === "upcoming"
